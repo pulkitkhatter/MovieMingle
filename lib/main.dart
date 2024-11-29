@@ -20,7 +20,6 @@ class MyApp extends StatelessWidget {
 class SplashScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    // Simulate a splash screen for 3 seconds and then navigate to the HomeScreen
     Timer(Duration(seconds: 3), () {
       Navigator.pushReplacement(
         context,
@@ -32,7 +31,11 @@ class SplashScreen extends StatelessWidget {
       backgroundColor: Colors.black,
       body: Center(
         child: Image.asset(
-            'assets/images/movie_splash.png'), // Add your splash image here
+          'assets/images/movie_splash.png',
+          fit: BoxFit.contain,
+          width: MediaQuery.of(context).size.width * 0.8,
+          height: MediaQuery.of(context).size.height * 0.8,
+        ),
       ),
     );
   }
@@ -53,7 +56,6 @@ class _HomeScreenState extends State<HomeScreen> {
     fetchMovies();
   }
 
-  // Fetching movies from the API
   Future<void> fetchMovies() async {
     try {
       final response = await http
@@ -75,14 +77,12 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  // Handle Bottom Navigation Bar item selection
   void _onItemTapped(int index) {
     setState(() {
       _currentIndex = index;
     });
   }
 
-  // Navigating to SearchScreen or HomeScreen based on the selected index
   Widget _getScreen() {
     if (_currentIndex == 0) {
       return HomeScreenBody(movies: movies);
@@ -132,7 +132,7 @@ class HomeScreenBody extends StatelessWidget {
         : GridView.builder(
             padding: EdgeInsets.all(10),
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 3,
+              crossAxisCount: MediaQuery.of(context).size.width > 600 ? 5 : 3,
               crossAxisSpacing: 10,
               mainAxisSpacing: 10,
               childAspectRatio: 0.7,
@@ -191,7 +191,6 @@ class _SearchScreenState extends State<SearchScreen> {
   TextEditingController _controller = TextEditingController();
   List searchResults = [];
 
-  // Fetch search results
   Future<void> searchMovies(String query) async {
     if (query.isEmpty) return;
 
